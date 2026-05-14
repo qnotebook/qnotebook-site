@@ -1,0 +1,19 @@
+base_url = "https://qnotebook.org"
+title = "qnotebook"
+description = "A PyQt6 wiki editor with true WYSIWYG editing over plain markdown files."
+default_language = "en"
+compile_sass = true
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+build_search_index = false
+
+taxonomies = [
+  { name = "tags", feed = true },
+]
+
+[markdown]
+smart_punctuation = true
+
+[extra]
+repo_url = "https://codeberg.org/qnotebook/qnotebook"
+author = "qdistro"
