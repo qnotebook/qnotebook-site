@@ -1,22 +1,198 @@
 {% extends "base.html" %}
 
-{% block content %}
-<article class="page home">
-  {{ section.content | safe }}
+{% block description %}qnotebook is a PyQt6 wiki editor with true WYSIWYG editing over plain Markdown files — wiki links, full-text search, bulletproof saves with 3-way merge, Syncthing-aware, and a plugin system. Your notes stay portable Markdown you own.{% endblock %}
 
-  {% set blog = get_section(path="blog/_index.md") %}
-  {% if blog.pages %}
-  <section class="recent">
-    <h2>Recent posts</h2>
-    <ul class="post-list">
-      {% for post in blog.pages | slice(end=5) %}
+{% block content %}
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">PyQt6 · WYSIWYG · plain Markdown</p>
+    <h1>Notes you edit like a document, stored as files you own.</h1>
+    <p class="lede">
+      qnotebook turns any folder of Markdown files into a richly linked personal
+      wiki you edit live — no preview pane, no proprietary format, no lock-in.
+      Headings, tables, task lists, wiki links and images render as you type, while
+      the files on disk stay clean, portable Markdown any tool can read.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#install">Get qnotebook</a>
+      <a class="btn btn-ghost" href="{{ config.extra.repo_url }}">Read the source</a>
+    </div>
+    <p class="hero-note">Inspired by Zim Desktop Wiki · written from scratch · GPL-2.0 · hundreds of tests</p>
+  </div>
+</section>
+
+<section class="pillars wrap">
+  <div class="card">
+    <div class="card-icon" aria-hidden="true">✍️</div>
+    <h3>True WYSIWYG</h3>
+    <p>
+      A single editing surface renders Markdown as styled rich text as you type —
+      there's no separate preview tab. What you see is exactly what's in the file.
+    </p>
+  </div>
+  <div class="card">
+    <div class="card-icon" aria-hidden="true">📄</div>
+    <h3>Plain Markdown, your folder</h3>
+    <p>
+      Any directory of <code>.md</code> files is a notebook. qnotebook adds only a
+      hidden <code>.qnotebook/</code> index, so your notes stay fully portable and
+      open in any other editor.
+    </p>
+  </div>
+  <div class="card">
+    <div class="card-icon" aria-hidden="true">🛟</div>
+    <h3>Saves you can trust</h3>
+    <p>
+      Every save is atomic and runs a 3-way merge ladder with pre-save snapshots, so
+      an external edit or a sync race never silently eats your words.
+    </p>
+  </div>
+</section>
+
+<section id="features" class="band">
+  <div class="wrap feature">
+    <div class="feature-tag">Write &amp; navigate</div>
+    <h2>A wiki that gets out of your way</h2>
+    <p class="section-lede">
+      Link pages together, jump anywhere instantly, and let the structure emerge as
+      you write — without ever leaving the editing surface.
+    </p>
+    <ul class="ladder">
       <li>
-        <time datetime="{{ post.date }}">{{ post.date | date(format='%Y-%m-%d') }}</time>
-        <a href="{{ post.permalink }}">{{ post.title }}</a>
+        <span class="ladder-step">Link</span>
+        <div>
+          <strong>Wiki linking with backlinks</strong>
+          <p><code>[[Page]]</code>, <code>[[Foo:Bar]]</code>, <code>[[Target|alias]]</code> and <code>[[Page#Heading]]</code> render as clickable links, with a backlinks dock and automatic rewriting when you rename a page.</p>
+        </div>
       </li>
-      {% endfor %}
+      <li>
+        <span class="ladder-step">Find</span>
+        <div>
+          <strong>Full-text search &amp; command palette</strong>
+          <p>SQLite FTS5 search with hit highlighting and click-to-jump, a fast quick switcher, and a fuzzy command palette over every menu action.</p>
+        </div>
+      </li>
+      <li>
+        <span class="ladder-step">Author</span>
+        <div>
+          <strong>Everything you'd reach for</strong>
+          <p>Task lists with click-to-toggle, tables, fenced code with highlighting, image paste &amp; drag-and-drop, LaTeX equations, footnotes, tags, page templates, a journal/calendar, a table of contents, and a link-map graph view.</p>
+        </div>
+      </li>
+      <li>
+        <span class="ladder-step">Recall</span>
+        <div>
+          <strong>Version history</strong>
+          <p>Optional per-save Git commits with a built-in page-history viewer and one-click "restore this version."</p>
+        </div>
+      </li>
     </ul>
-  </section>
-  {% endif %}
-</article>
+  </div>
+</section>
+
+<section class="wrap split">
+  <div class="split-text">
+    <h2>Bulletproof saves</h2>
+    <p>
+      Writing is atomic — a same-directory temp file, an <code>fsync</code>, and an
+      atomic replace. When a file changed underneath you, an 8-rung merge ladder
+      (trivial → disjoint hunks → <code>git diff3</code> → optional
+      <code>wiggle</code>/<code>mergiraf</code>) reconciles it, with a 3-pane merge
+      dialog only when a real conflict can't be resolved automatically.
+    </p>
+    <p class="muted">
+      A round-trip guard rejects any merge the parser can't faithfully re-read — your
+      file is never left in a shape qnotebook itself couldn't open.
+    </p>
+  </div>
+  <div class="split-text">
+    <h2>Built for sync</h2>
+    <p>
+      qnotebook detects Syncthing's <code>*.sync-conflict-*</code> files on open and
+      through a live file watcher, and ships a conflict-resolver plugin to review and
+      merge them — keep mine, keep theirs, save both, or merge.
+    </p>
+    <p>
+      Combined with optional Git versioning, it's at home on a folder you sync across
+      machines with Syncthing, Git, or anything else that touches plain files.
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap feature">
+    <div class="feature-tag">Make it yours</div>
+    <h2>Customizable, scriptable, pluggable</h2>
+    <p class="section-lede">
+      A Settings dialog with searchable categories and fully rebindable shortcuts, a
+      dark theme, and session restore — plus a plugin system that discovers plugins
+      straight from your notebook's <code>.qnotebook/plugins/</code> directory.
+    </p>
+    <div class="tech-grid">
+      <div><strong>Headless CLI</strong><span><code>--search</code>, <code>--export</code>, <code>--append-today</code> &amp; more</span></div>
+      <div><strong>Plugins</strong><span>conflict resolver, word count, journal, link map</span></div>
+      <div><strong>Quick switcher</strong><span>jump to any page instantly</span></div>
+      <div><strong>Command palette</strong><span>fuzzy-run any action</span></div>
+      <div><strong>Dark mode</strong><span>and session restore on launch</span></div>
+      <div><strong>Send-To</strong><span>receive snippets from other qdistro apps</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap feature">
+  <div class="feature-tag">Under the hood</div>
+  <h2>Built to last, tested hard</h2>
+  <div class="tech-grid">
+    <div><strong>PyQt6</strong><span>no GTK / GObject dependency</span></div>
+    <div><strong>mistune v3</strong><span>CommonMark + GFM parsing</span></div>
+    <div><strong>SQLite FTS5</strong><span>pages, backlinks, tags, search</span></div>
+    <div><strong>SafeWriter</strong><span>atomic save + merge ladder</span></div>
+    <div><strong>Git versioning</strong><span>optional per-save history</span></div>
+    <div><strong>Hundreds of tests</strong><span>round-trip, fuzz &amp; stress</span></div>
+  </div>
+  <p class="section-lede small">
+    The core invariant is proven by property test: re-serializing a parsed document
+    converges to a fixed point, so your Markdown round-trips cleanly every save.
+    Requires Python 3.10+, PyQt6 6.5+, and mistune 3.
+  </p>
+</section>
+
+<section id="install" class="band band-accent">
+  <div class="wrap">
+    <h2>Get qnotebook</h2>
+    <p class="section-lede">
+      qnotebook is in active development — feature-rich and pre-1.0. Clone it, install
+      dependencies, and point it at any folder of Markdown files.
+    </p>
+    <pre><code>git clone https://codeberg.org/qnotebook/qnotebook
+cd qnotebook
+just install-deps
+just run /path/to/notebook</code></pre>
+    <p class="section-lede small">
+      Heads up: user plugins run with full Python privileges — only open notebooks you
+      trust.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="{{ config.extra.repo_url }}">Source on Codeberg</a>
+      <a class="btn btn-ghost" href="{{ get_url(path='@/blog/_index.md') }}">Read the blog</a>
+    </div>
+  </div>
+</section>
+
+{% set blog = get_section(path="blog/_index.md") %}
+{% if blog.pages %}
+<section class="wrap recent">
+  <h2>From the blog</h2>
+  <ul class="post-list">
+    {% for post in blog.pages | slice(end=4) %}
+    <li>
+      <time datetime="{{ post.date }}">{{ post.date | date(format='%Y-%m-%d') }}</time>
+      <a href="{{ post.permalink }}">{{ post.title }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
 {% endblock %}
