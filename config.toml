@@ -15,5 +15,5 @@ taxonomies = [
 smart_punctuation = true
 
 [extra]
-repo_url = "https://codeberg.org/qnotebook/qnotebook"
+repo_url = "https://github.com/qnotebook/qnotebook"
 author = "qdistro"
